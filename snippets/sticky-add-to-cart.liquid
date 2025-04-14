@@ -1,0 +1,79 @@
+<div class="sticky-cart-container" {% unless section.settings.enable_sticky_bar %}style="display:none;"{% endunless %}>
+    
+  {% form 'product', product, id: 'stickyAddToCartForm', class: 'sticky-cart-form' %}
+    <div class="sticky-cart-bar">
+      <div class="sticky-cart-product-info">
+        <div class="sticky-cart-product-image">
+          <img src="{{ product.featured_media | image_url: width: 60 }}" alt="{{ product.title }}">
+        </div>
+        <div class="sticky-cart-product-title">
+          <span class="product-title">{{ product.title }}</span>
+          {% render 'price', product: product %}
+        </div>
+        
+
+      </div>
+      <div class="sticky-cart-form-controls">
+        <label for="stickyCartQuantity-{{ section.id }}" class="sticky-cart-quantity-label"></label>
+        <div class="sticky-cart-quantity-wrapper">
+           
+          <div class="quantity quantity-container">
+            <button class="quantity__button quantity-btn minus" type="button">−</button>
+            <input type="number" name="quantity" min="1" value="1" class="quantity__input sticky-cart-quantity-select" id="stickyCartQuantity-{{ section.id }}" data-quantity-input />
+            <button class="quantity__button quantity-btn plus" type="button">+</button>
+          </div>
+
+        </div>
+        {% if product.has_only_default_variant %}
+          <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+        {% else %}
+          <select name="id" class="sticky-cart-variant-select">
+            {% for variant in product.variants %}
+              <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
+                {{ variant.title }} - ({{ variant.price | money_with_currency }})
+              </option>
+            {% endfor %}
+          </select>
+        {% endif %}
+        <button type="submit" class="sticky-cart-add-button product-form__submit button button--full-width button--secondary">Add To Cart</button>
+      </div>
+    </div>
+  {% endform %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const stickyCartBar = document.querySelector('.sticky-cart-bar');
+  const productForm = document.querySelector('.product-form');
+  
+  if (stickyCartBar && productForm) {
+    window.addEventListener('scroll', function() {
+      const formRect = productForm.getBoundingClientRect();
+      if (formRect.bottom < 0) {
+        stickyCartBar.style.display = 'flex';
+      } else {
+        stickyCartBar.style.display = 'none';
+      }
+    });
+  }
+});
+  
+document.querySelectorAll('.quantity-container').forEach(container => {
+  const input = container.querySelector('.quantity-input');
+  const minus = container.querySelector('.minus');
+  const plus = container.querySelector('.plus');
+  
+  minus.addEventListener('click', () => {
+    let value = parseInt(input.value, 10);
+    if (value > 1) {
+      input.value = value - 1;
+    }
+  });
+  
+  plus.addEventListener('click', () => {
+    let value = parseInt(input.value, 10);
+    input.value = value + 1;
+  });
+});
+
+</script>
