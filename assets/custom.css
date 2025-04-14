@@ -63,3 +63,25 @@
   align-items: center;
   gap: 0.5rem;
 }
+@media (max-width: 749px) {
+ .sticky-cart-bar {
+    padding: 10px;
+  }
+  .sticky-cart-product-title .product-title,
+  .sticky-cart-product-title .price {
+    font-size: 12px;
+  }
+  .sticky-cart-quantity-label,
+  .sticky-cart-quantity-wrapper {
+    display: none;
+  }
+  .sticky-cart-add-button {
+    padding: 8px 15px;
+  }
+  .sticky-cart-product-title {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } 
+}
